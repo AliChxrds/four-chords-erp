@@ -1,0 +1,10 @@
+BEGIN;
+
+ALTER TABLE customers
+ALTER COLUMN first_name DROP NOT NULL;
+
+ALTER TABLE customers
+ALTER COLUMN last_name DROP NOT NULL;
+
+COMMIT;
+
