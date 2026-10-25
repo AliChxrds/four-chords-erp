@@ -1,27 +1,12 @@
 # Testing
 
-The repository does not yet contain an automated test suite. npm test intentionally exits with the existing placeholder error; it is not evidence of a passing test run.
+Automated tests live in backend/tests. Commands, the disposable-database setup, coverage, and recorded results are in the [setup guide](../../docs/setup.md#tests) and the [migration guide](../../docs/migrations.md#integration-checks).
 
-## Manual checks on a disposable local database
+- `npm test` runs the customer validator tests, and the customer API tests when MIGRATION_TEST_PORT and MIGRATION_TEST_ADMIN point at a disposable local PostgreSQL cluster.
+- `npm run test:migrations` checks fresh installs, concurrent and repeated runs, counter seeding, rollback of a failed migration, and refusal of an untracked schema.
 
-Follow the README setup and use synthetic customer records only.
+## Cases not yet covered
 
-| Check | Expected behaviour |
-| --- | --- |
-| GET / | 200 with the API startup message; no database check |
-| GET /api/customers?page=0 | 400 |
-| GET /api/customers?limit=101 | 400 |
-| GET /api/customers?customer_type=unknown | 400 |
-| POST a complete synthetic individual from the README | 201 with customer ID and generated code |
-| GET the returned customer ID | 200 with the saved record |
-| Search for the synthetic customer's name | Matching record and pagination metadata |
-| POST the same non-null email again | 409 for a duplicate customer |
-| PUT a complete updated customer body | 200 with updated values |
-| DELETE the saved ID | 200; record becomes inactive, not physically deleted |
-| GET /api/customers?active=false | Includes the deactivated record |
+Authentication and authorisation (ERP-007), concurrent updates to the same customer, a missing counter row at request time, and database failures during a request.
 
-## Known cases to cover before release
-
-Missing or blank names, company contacts, invalid active filters, invalid field types, duplicate email on update, partial PUT requests, missing counter row, concurrent customer creation, and database failures. The current implementation has gaps in these areas; these are test requirements, not passing results.
-
-Before presenting a demo, record the runtime versions, database version, commit, request bodies, and observed responses. Do not claim end-to-end verification until the database-backed checks have actually passed.
+Before presenting a demo, record the runtime versions, database version, commit, and test output. Use synthetic customer records only.
