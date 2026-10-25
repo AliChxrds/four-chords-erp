@@ -6,6 +6,35 @@ import {
     deleteCustomer as deleteCustomerService
 } from "../services/customerService.js";
 
+import { validateCustomer } from "../validators/customerValidator.js";
+
+
+// ============================================
+// HANDLE DUPLICATE VALUES
+// Returns true when a 409 response was sent
+// ============================================
+
+const sendDuplicateError = (error, res) => {
+
+    if (error.code !== "23505") {
+        return false;
+    }
+
+
+    const message =
+        error.constraint === "customers_email_key"
+            ? "A customer with this email already exists"
+            : "A customer with these details already exists";
+
+
+    res.status(409).json({
+        success: false,
+        message
+    });
+
+    return true;
+};
+
 
 // ============================================
 // GET CUSTOMERS
@@ -61,6 +90,15 @@ export const getCustomers = async (req, res) => {
                 success: false,
                 message:
                     "customer_type must be either individual or company"
+            });
+        }
+
+
+        // Validate active filter
+        if (!["true", "false", "all"].includes(active)) {
+            return res.status(400).json({
+                success: false,
+                message: "active must be true, false or all"
             });
         }
 
@@ -173,94 +211,20 @@ export const createCustomer = async (req, res) => {
 
     try {
 
-        const {
-            customer_type = "individual",
-            company_name,
-            first_name,
-            last_name,
-            email,
-            phone
-        } = req.body;
+        const { error, changes } = validateCustomer(req.body);
 
 
-        // Validate customer type
-        if (
-            !["individual", "company"]
-                .includes(customer_type)
-        ) {
+        if (error) {
 
             return res.status(400).json({
                 success: false,
-                message:
-                    "customer_type must be either individual or company"
+                message: error
             });
         }
 
 
-        // Individual validation
-        if (customer_type === "individual") {
-
-            if (!first_name) {
-
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "First name is required for individual customers"
-                });
-            }
-        }
-
-
-        // Company validation
-        if (customer_type === "company") {
-
-            if (!company_name) {
-
-                return res.status(400).json({
-                    success: false,
-                    message:
-                        "Company name is required for company customers"
-                });
-            }
-        }
-
-
-        // Email validation
-        if (email) {
-
-            const emailRegex =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-            if (!emailRegex.test(email)) {
-
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid email address"
-                });
-            }
-        }
-
-
-        // Phone validation
-        if (phone) {
-
-            const phoneRegex =
-                /^[0-9+\-\s()]{7,20}$/;
-
-
-            if (!phoneRegex.test(phone)) {
-
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid phone number"
-                });
-            }
-        }
-
-
         const customer =
-            await createCustomerService(req.body);
+            await createCustomerService(changes);
 
 
         res.status(201).json({
@@ -278,12 +242,8 @@ export const createCustomer = async (req, res) => {
         );
 
 
-        if (error.code === "23505") {
-
-            return res.status(409).json({
-                success: false,
-                message: "Customer already exists"
-            });
+        if (sendDuplicateError(error, res)) {
+            return;
         }
 
 
@@ -315,92 +275,36 @@ export const updateCustomer = async (req, res) => {
         }
 
 
-        const {
-            customer_type,
-            company_name,
-            first_name,
-            email,
-            phone
-        } = req.body;
+        // Required names are checked against the saved record
+        // combined with the changes, so load it first
+        const existingCustomer =
+            await getCustomerById(id);
 
 
-        if (
-            customer_type &&
-            !["individual", "company"]
-                .includes(customer_type)
-        ) {
+        if (!existingCustomer) {
 
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
-                message:
-                    "customer_type must be either individual or company"
+                message: "Customer not found"
             });
         }
 
 
-        if (
-            customer_type === "individual" &&
-            !first_name
-        ) {
+        const { error, changes } =
+            validateCustomer(req.body, existingCustomer);
+
+
+        if (error) {
 
             return res.status(400).json({
                 success: false,
-                message:
-                    "First name is required for individual customers"
+                message: error
             });
-        }
-
-
-        if (
-            customer_type === "company" &&
-            !company_name
-        ) {
-
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Company name is required for company customers"
-            });
-        }
-
-
-        if (email) {
-
-            const emailRegex =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-            if (!emailRegex.test(email)) {
-
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid email address"
-                });
-            }
-        }
-
-
-        if (phone) {
-
-            const phoneRegex =
-                /^[0-9+\-\s()]{7,20}$/;
-
-
-            if (!phoneRegex.test(phone)) {
-
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid phone number"
-                });
-            }
         }
 
 
         const customer =
-            await updateCustomerService(
-                id,
-                req.body
-            );
+            await updateCustomerService(id, changes);
 
 
         if (!customer) {
@@ -425,6 +329,11 @@ export const updateCustomer = async (req, res) => {
             "Update customer error:",
             error
         );
+
+
+        if (sendDuplicateError(error, res)) {
+            return;
+        }
 
 
         res.status(500).json({

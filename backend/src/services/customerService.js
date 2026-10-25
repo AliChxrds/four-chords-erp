@@ -129,24 +129,7 @@ export const getCustomerById = async (id) => {
 };
 
 
-// ============================================
-// GENERATE CUSTOMER CODE
-// ============================================
 
-// const generateCustomerCode = async (client) => {
-
-//     const result = await client.query(`
-//         SELECT
-//             'CUS-' ||
-//             LPAD(
-//                 nextval('customer_code_seq')::TEXT,
-//                 4,
-//                 '0'
-//             ) AS customer_code
-//     `);
-
-//     return result.rows[0].customer_code;
-// };
 
 const generateCustomerCode = async (client) => {
     const result = await client.query(`
@@ -194,7 +177,8 @@ export const createCustomer = async (customer) => {
             email = null,
             address = null,
             city = null,
-            tax_number = null
+            tax_number = null,
+            notes = null
         } = customer;
 
 
@@ -210,11 +194,12 @@ export const createCustomer = async (customer) => {
                 email,
                 address,
                 city,
-                tax_number
+                tax_number,
+                notes
             )
             VALUES (
                 $1, $2, $3, $4, $5,
-                $6, $7, $8, $9, $10
+                $6, $7, $8, $9, $10, $11
             )
             RETURNING *
             `,
@@ -228,7 +213,8 @@ export const createCustomer = async (customer) => {
                 email,
                 address,
                 city,
-                tax_number
+                tax_number,
+                notes
             ]
         );
 
@@ -256,54 +242,55 @@ export const createCustomer = async (customer) => {
 // ============================================
 
 export const updateCustomer = async (id, customer) => {
+    const allowedFields = [
+        "customer_type",
+        "company_name",
+        "first_name",
+        "last_name",
+        "phone",
+        "email",
+        "address",
+        "city",
+        "tax_number",
+        "notes"
+    ];
 
-    const {
-        customer_type,
-        company_name,
-        first_name,
-        last_name,
-        phone,
-        email,
-        address,
-        city,
-        tax_number
-    } = customer;
+    const updates = [];
+    const values = [];
 
+    for (const field of allowedFields) {
+        if (Object.prototype.hasOwnProperty.call(customer, field)) {
+            let value = customer[field];
+
+            // Store empty text fields as NULL
+            if (typeof value === "string" && value.trim() === "") {
+                value = null;
+            }
+
+            values.push(value);
+            updates.push(`${field} = $${values.length}`);
+        }
+    }
+
+    // No valid fields were supplied
+    if (updates.length === 0) {
+        return null;
+    }
+
+    values.push(id);
 
     const result = await pool.query(
         `
         UPDATE customers
-        SET
-            customer_type = $1,
-            company_name = $2,
-            first_name = $3,
-            last_name = $4,
-            phone = $5,
-            email = $6,
-            address = $7,
-            city = $8,
-            tax_number = $9
-        WHERE id = $10
+        SET ${updates.join(", ")}
+        WHERE id = $${values.length}
         RETURNING *
         `,
-        [
-            customer_type,
-            company_name,
-            first_name,
-            last_name,
-            phone,
-            email,
-            address,
-            city,
-            tax_number,
-            id
-        ]
+        values
     );
 
-
-    return result.rows[0];
+    return result.rows[0] ?? null;
 };
-
 
 // ============================================
 // DEACTIVATE CUSTOMER
