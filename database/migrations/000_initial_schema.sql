@@ -10,7 +10,6 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -34,7 +33,6 @@ CREATE TABLE public.business_units (
 );
 
 
-ALTER TABLE public.business_units OWNER TO postgres;
 
 --
 -- Name: business_units_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -49,7 +47,6 @@ CREATE SEQUENCE public.business_units_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.business_units_id_seq OWNER TO postgres;
 
 --
 -- Name: business_units_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -68,7 +65,6 @@ CREATE TABLE public.customer_code_counter (
 );
 
 
-ALTER TABLE public.customer_code_counter OWNER TO postgres;
 
 --
 -- Name: customer_code_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -82,7 +78,6 @@ CREATE SEQUENCE public.customer_code_seq
     CACHE 1;
 
 
-ALTER TABLE public.customer_code_seq OWNER TO postgres;
 
 --
 -- Name: customers; Type: TABLE; Schema: public; Owner: postgres
@@ -106,7 +101,6 @@ CREATE TABLE public.customers (
 );
 
 
-ALTER TABLE public.customers OWNER TO postgres;
 
 --
 -- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -121,7 +115,6 @@ CREATE SEQUENCE public.customers_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.customers_id_seq OWNER TO postgres;
 
 --
 -- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -148,7 +141,6 @@ CREATE TABLE public.expenses (
 );
 
 
-ALTER TABLE public.expenses OWNER TO postgres;
 
 --
 -- Name: expenses_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -163,7 +155,6 @@ CREATE SEQUENCE public.expenses_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.expenses_id_seq OWNER TO postgres;
 
 --
 -- Name: expenses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -185,7 +176,6 @@ CREATE TABLE public.inventory (
 );
 
 
-ALTER TABLE public.inventory OWNER TO postgres;
 
 --
 -- Name: inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -200,7 +190,6 @@ CREATE SEQUENCE public.inventory_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.inventory_id_seq OWNER TO postgres;
 
 --
 -- Name: inventory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -225,7 +214,6 @@ CREATE TABLE public.payments (
 );
 
 
-ALTER TABLE public.payments OWNER TO postgres;
 
 --
 -- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -240,7 +228,6 @@ CREATE SEQUENCE public.payments_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.payments_id_seq OWNER TO postgres;
 
 --
 -- Name: payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -261,7 +248,6 @@ CREATE TABLE public.product_categories (
 );
 
 
-ALTER TABLE public.product_categories OWNER TO postgres;
 
 --
 -- Name: product_catergories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -276,7 +262,6 @@ CREATE SEQUENCE public.product_catergories_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.product_catergories_id_seq OWNER TO postgres;
 
 --
 -- Name: product_catergories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -304,7 +289,6 @@ CREATE TABLE public.products (
 );
 
 
-ALTER TABLE public.products OWNER TO postgres;
 
 --
 -- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -319,7 +303,6 @@ CREATE SEQUENCE public.products_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.products_id_seq OWNER TO postgres;
 
 --
 -- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -343,7 +326,6 @@ CREATE TABLE public.sale_items (
 );
 
 
-ALTER TABLE public.sale_items OWNER TO postgres;
 
 --
 -- Name: sale_items_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -358,7 +340,6 @@ CREATE SEQUENCE public.sale_items_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.sale_items_id_seq OWNER TO postgres;
 
 --
 -- Name: sale_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -388,7 +369,6 @@ CREATE TABLE public.sales (
 );
 
 
-ALTER TABLE public.sales OWNER TO postgres;
 
 --
 -- Name: sales_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -403,7 +383,6 @@ CREATE SEQUENCE public.sales_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.sales_id_seq OWNER TO postgres;
 
 --
 -- Name: sales_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -428,7 +407,6 @@ CREATE TABLE public.stock_movements (
 );
 
 
-ALTER TABLE public.stock_movements OWNER TO postgres;
 
 --
 -- Name: stock_movements_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -443,7 +421,6 @@ CREATE SEQUENCE public.stock_movements_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.stock_movements_id_seq OWNER TO postgres;
 
 --
 -- Name: stock_movements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -471,7 +448,6 @@ CREATE TABLE public.suppliers (
 );
 
 
-ALTER TABLE public.suppliers OWNER TO postgres;
 
 --
 -- Name: suppliers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -486,7 +462,6 @@ CREATE SEQUENCE public.suppliers_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.suppliers_id_seq OWNER TO postgres;
 
 --
 -- Name: suppliers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -512,7 +487,6 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -527,7 +501,6 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -1008,4 +981,3 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
