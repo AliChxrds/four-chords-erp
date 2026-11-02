@@ -1,19 +1,19 @@
 # Project dashboard
 
-Updated: 17 September 2026
+Updated: 2 November 2026
 
 | Item | Position |
 |---|---|
 | Developer | Alinjavwa Sichela, working solo |
 | Capacity | 30 hours per week |
 | Business | Products and services |
-| Current phase | Week 1: scope and foundation |
+| Current phase | Platform foundation (M1); schedule about six weeks behind baseline, see [audit](../audit/2026-11-02-repository-audit.md#7-prioritised-roadmap) |
 | Pilot target | 9 December 2026, end of week 12 |
 | Launch allowance | 10–23 December 2026 |
 | Capacity budget | 360 hours through pilot; 420 including contingency |
 | Actual hours | Not reported |
-| Status | ERP-002 and ERP-003 complete; customer validation is next |
-| Next technical task | ERP-004: correct customer validation and API errors |
+| Status | ERP-002 to ERP-005 done; M1 implemented and awaiting CI on GitHub |
+| Next technical task | M2 access control (ERP-007), after the role matrix (D-006) is confirmed |
 
 ## Working documents
 

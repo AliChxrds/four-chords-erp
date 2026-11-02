@@ -7,8 +7,8 @@ Baseline: 17 September 2026. Actual hours for all tasks: not reported. Existing 
 | ERP-001 | Confirm workflows, roles, MVP | High | Ready | 5 | Business input |
 | ERP-002 | Repair dependencies and setup instructions | High | Done | 3 | — |
 | ERP-003 | Repair migrations and initialize customer counter | High | Done | 5 | ERP-002 for execution |
-| ERP-004 | Correct customer validation and API errors | High | Ready | 6 | — |
-| ERP-005 | Add customer and migration checks | High | Backlog | 6 | ERP-002–004 |
+| ERP-004 | Correct customer validation and API errors | High | Done | 6 | — |
+| ERP-005 | Add customer and migration checks | High | Done | 6 | ERP-002–004 |
 | ERP-006 | Refine backlog and review week 1 | Medium | Ready | 5 | ERP-001–005 for final review |
 | ERP-007 | Authentication and role permissions | High | Backlog | 20 | ERP-001,005 |
 | ERP-008 | Application shell and navigation | High | Backlog | 10 | ERP-001,002;007 for protected integration |
@@ -23,6 +23,7 @@ Baseline: 17 September 2026. Actual hours for all tasks: not reported. Existing 
 | ERP-017 | End-to-end verification and recovery | High | Backlog | 30 | ERP-007–016 |
 | ERP-018 | Controlled business pilot | High | Backlog | 30 | ERP-017; pilot users/data |
 | ERP-019 | Pilot fixes and launch | High | Backlog | 60 | ERP-018; launch acceptance |
+| M1 | Platform foundation: config, errors, logging, health, CORS/headers/rate limits, CI, /api/v1 | High | Testing | — | — |
 
 Total: 420 hours, including a 60-hour launch/contingency allowance. Pilot capacity: 360 hours.
 

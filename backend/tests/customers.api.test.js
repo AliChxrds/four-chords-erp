@@ -52,7 +52,8 @@ describe("customers API", { skip }, () => {
             DB_PORT: String(port),
             DB_USER: role,
             DB_NAME: database,
-            DB_PASSWORD: ""
+            DB_PASSWORD: "",
+            LOG_LEVEL: "warn"
         });
 
         pool = (await import("../src/config/database.js")).default;
@@ -198,6 +199,24 @@ describe("customers API", { skip }, () => {
         it("returns 400 for an invalid ID and 404 for a missing customer", async () => {
             assert.equal((await call("GET", "/0")).status, 400);
             assert.equal((await call("GET", "/999999")).status, 404);
+        });
+    });
+
+    describe("health and versioned routes", () => {
+        it("reports ready when the database is reachable", async () => {
+            const response = await fetch(new URL("/health/ready", baseUrl));
+
+            assert.equal(response.status, 200);
+            assert.deepEqual(await response.json(), { success: true, status: "ready" });
+        });
+
+        it("serves the same customers at /api/v1/customers", async () => {
+            const customer = await createIndividual({ last_name: "Versioned" });
+            const legacy = await call("GET", `/${customer.id}`);
+            const versioned = await fetch(new URL(`/api/v1/customers/${customer.id}`, baseUrl));
+
+            assert.equal(versioned.status, 200);
+            assert.deepEqual(await versioned.json(), legacy.body);
         });
     });
 

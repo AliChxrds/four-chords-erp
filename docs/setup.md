@@ -24,9 +24,9 @@ From `backend`, copy the example only if `.env` does not already exist:
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-Edit `.env` with local database values. `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` configure PostgreSQL. `PORT` controls the HTTP port, defaulting to 5000. The example values are placeholders. Keep `.env` out of Git; `.env.example` is safe to commit.
+Edit `.env` with local database values. `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` configure PostgreSQL; `DB_NAME` and `DB_USER` are required. `PORT` controls the HTTP port, defaulting to 5000. `CORS_ORIGINS`, `LOG_LEVEL`, `TRUST_PROXY` and the optional pool and rate-limit settings are explained in `.env.example`. The example values are placeholders. Keep `.env` out of Git; `.env.example` is safe to commit.
 
-Start commands from `backend` so dotenv finds the correct file. Do not replace an existing environment file or create a production database as part of this setup check.
+The backend always reads `backend/.env`, whichever directory a command starts from. Variables already set in the environment take precedence, which is how hosted environments should supply secrets. `npm start` and `npm run migrate` stop with a list of problems if a setting is missing or invalid. Do not replace an existing environment file or create a production database as part of this setup check.
 
 ## Run locally
 
@@ -46,7 +46,7 @@ Open `http://localhost:5000/` (or your configured port). Expected response:
 {"message":"Four Chords ERP API is running"}
 ```
 
-Stop with Ctrl+C. The root endpoint confirms the HTTP process is running; it does not test database connectivity. Customer endpoints require a configured, migrated database. Authentication is planned under ERP-007; use this setup locally during development.
+Stop with Ctrl+C; the server finishes in-flight requests and closes database connections first. `GET /health` confirms the HTTP process is running. `GET /health/ready` also runs `SELECT 1` and returns 503 when the database is unreachable; use it for load balancer and uptime checks. Logs are JSON lines on stdout (errors and warnings on stderr). They include a request ID but never request bodies or query strings. Customer endpoints require a configured, migrated database. Authentication is planned under ERP-007; use this setup locally during development.
 
 ## Database setup
 
@@ -60,7 +60,7 @@ From `backend`:
 npm.cmd test
 ```
 
-This runs every `tests/*.test.js` file with Node's built-in test runner. The customer validator tests need no database. The customer API tests need a disposable PostgreSQL cluster and are skipped unless the same variables as the [migration integration checks](migrations.md#integration-checks) are set:
+This runs every `tests/*.test.js` file with Node's built-in test runner. The customer validator tests and the application tests (health checks, errors, CORS, headers, rate limiting, startup validation) need no database. The customer API tests need a disposable PostgreSQL cluster and are skipped unless the same variables as the [migration integration checks](migrations.md#integration-checks) are set:
 
 ```powershell
 $env:MIGRATION_TEST_PORT = '55439'
@@ -72,7 +72,11 @@ The API tests create a uniquely named database and role on 127.0.0.1 at that por
 
 Covered: request shape and field types, individual and company creation, required names on create and update (including type changes), trimming and blank values, optional and duplicate emails on create and update, partial updates, pagination and filter validation, search, invalid and missing IDs, and deactivation. Not covered yet: authentication (ERP-007) and concurrent updates to the same customer.
 
-Recorded on 25 October 2026 with Node 24.16.0 and PostgreSQL 15.4: 33 tests passed (17 validator, 16 API), and all five migration checks passed. Without the test variables, the 17 validator tests passed and the API suite was skipped.
+Recorded on 2 November 2026 with Node 24.16.0 and PostgreSQL 15.4: 46 tests passed (11 application, 17 validator, 18 API), and all five migration checks passed. Without the test variables, 28 tests passed and the API suite was skipped. `npm audit --omit=dev` reported no vulnerabilities.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request. It installs with `npm ci`, fails on high or critical production dependency advisories, and runs `npm test` and `npm run test:migrations` against a throwaway `postgres:15` service container.
 
 ## Verification recorded for ERP-002
 

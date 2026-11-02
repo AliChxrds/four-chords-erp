@@ -134,9 +134,9 @@ export const getCustomers = async (req, res) => {
 
     } catch (error) {
 
-        console.error(
-            "Get customers error:",
-            error
+        req.log.error(
+            "Get customers failed",
+            { error }
         );
 
 
@@ -189,9 +189,9 @@ export const getCustomer = async (req, res) => {
 
     } catch (error) {
 
-        console.error(
-            "Get customer error:",
-            error
+        req.log.error(
+            "Get customer failed",
+            { error }
         );
 
 
@@ -236,9 +236,9 @@ export const createCustomer = async (req, res) => {
 
     } catch (error) {
 
-        console.error(
-            "Create customer error:",
-            error
+        req.log.error(
+            "Create customer failed",
+            { error }
         );
 
 
@@ -325,9 +325,9 @@ export const updateCustomer = async (req, res) => {
 
     } catch (error) {
 
-        console.error(
-            "Update customer error:",
-            error
+        req.log.error(
+            "Update customer failed",
+            { error }
         );
 
 
@@ -385,9 +385,9 @@ export const deleteCustomer = async (req, res) => {
 
     } catch (error) {
 
-        console.error(
-            "Delete customer error:",
-            error
+        req.log.error(
+            "Delete customer failed",
+            { error }
         );
 
 

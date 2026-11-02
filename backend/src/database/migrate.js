@@ -57,8 +57,12 @@ export async function runMigrations(pool, { directory = migrationsDir, log = con
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-    const { default: pool } = await import("../config/database.js");
+    const { assertValidConfig } = await import("../config/env.js");
+    const { createPool } = await import("../config/database.js");
+    // Migrations may run longer than the API's per-statement limit.
+    const pool = createPool({ statementTimeoutMs: 0 });
     try {
+        assertValidConfig();
         await runMigrations(pool);
         console.log("Database migrations completed successfully.");
     } catch (error) {

@@ -10,7 +10,8 @@ A modular ERP prototype for Four Chords Enterprises Limited. The implemented bac
 - Transaction-based customer-code allocation.
 - Customer validation of field types, required names (checked against the saved record on updates), email, and phone.
 - A migration runner that applies each SQL migration once, in its own transaction.
-- Automated validator and API tests, plus migration integration checks.
+- Automated validator, application and API tests, plus migration integration checks, run by GitHub Actions on every push to `main` and every pull request.
+- Platform foundation: startup configuration validation, JSON error responses, structured JSON logs with request IDs, liveness and readiness health checks, security headers, a CORS allowlist, rate limiting on `/api`, and graceful shutdown.
 
 This is a development prototype, not a complete deployed ERP. Authentication, authorisation, a user interface, analytics dashboards, and the other business-module APIs are not implemented in the current source tree.
 
@@ -46,17 +47,21 @@ npm start
 
 `npm run migrate` applies migrations 000–005 and initialises the customer code counter; rerunning it skips applied files. Read the [migration guide](docs/migrations.md) before using an existing database. Full instructions, including Windows commands, are in the [setup guide](docs/setup.md).
 
-The API uses port 5000 unless PORT is set. GET http://localhost:5000/ returns a startup message; it does not check database connectivity.
+The API uses port 5000 unless PORT is set, and refuses to start if a setting in `backend/.env` is missing or invalid. GET http://localhost:5000/health confirms the process is running; GET /health/ready also checks the database and returns 503 when it is unreachable. The variables are documented in [backend/.env.example](backend/.env.example).
 
 ## Customer endpoints
 
+New clients should use `/api/v1/customers`. The unversioned `/api/customers` paths behave identically and remain for existing clients.
+
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | /api/customers | List and search customers |
-| GET | /api/customers/:id | Fetch one customer |
-| POST | /api/customers | Create a customer |
-| PUT | /api/customers/:id | Update the supplied customer fields |
-| DELETE | /api/customers/:id | Set is_active to false |
+| GET | /api/v1/customers | List and search customers |
+| GET | /api/v1/customers/:id | Fetch one customer |
+| POST | /api/v1/customers | Create a customer |
+| PUT | /api/v1/customers/:id | Update the supplied customer fields |
+| DELETE | /api/v1/customers/:id | Set is_active to false |
+
+Errors use `{ "success": false, "code": "...", "message": "..." }`. `code` is present on errors raised outside the customer handlers: `NOT_FOUND`, `INVALID_JSON`, `PAYLOAD_TOO_LARGE`, `RATE_LIMITED`, `INTERNAL_ERROR`. Every response carries an `X-Request-Id` header that matches the server log entry.
 
 List parameters: search, customer_type (individual or company), page (positive integer), limit (1-100), and active (true, false, or all). Other values return 400.
 

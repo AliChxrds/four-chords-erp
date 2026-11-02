@@ -53,3 +53,17 @@ Verification: npm run test:migrations passed on a separate local PostgreSQL 15 c
 Added reusable integration checks and migration instructions. Existing application database adoption is not performed: its schema/history must be reconciled on a backup copy before use. Actual developer hours remain unreported; schedule unchanged.
 
 Next: ERP-004 customer validation and consistent API errors. ERP-001 business decisions remain open.
+
+## Repository audit and M1 platform foundation — 2 November 2026
+
+Audit recorded in [the audit report](../audit/2026-11-02-repository-audit.md). ERP-004 and ERP-005 had already been completed in commits `4feff88` and `99fdda6`; the board now shows them as Done. Against the baseline plan the work is about six weeks behind (week 7 planned ERP-013). The expanded scope in the master brief exceeds the 420-hour budget, so the audit proposes milestones M1–M11 and a reduced pilot scope for your decision.
+
+M1 implemented on branch `feat/m1-platform-foundation`: startup configuration validation, JSON error and 404 responses, structured logs with request IDs, `/health` and `/health/ready`, helmet headers, a CORS allowlist, `/api` rate limiting, graceful shutdown, `/api/v1/customers` alongside `/api/customers`, GitHub Actions CI, and lockfile fixes for three vulnerable dependencies.
+
+Evidence (Node 24.16.0, PostgreSQL 15.4, disposable cluster): `npm test` 46 passed (11 application, 17 validator, 18 API); without DB variables, 28 passed and the API suite was skipped. `npm run test:migrations` passed all five checks. `npm audit --omit=dev` found 0 vulnerabilities. A manual smoke test of `npm run migrate` and `node src/server.js` against a scratch database returned ready, created `CUS-0001` through `/api/v1/customers`, and listed it through `/api/customers`.
+
+Limitations: CI has not yet run on GitHub. Graceful shutdown was not exercised on Windows, where SIGTERM cannot be caught.
+
+Actual developer hours: not reported.
+
+Next: confirm D-006 (role matrix), hosting, booking ownership, ZRA Smart Invoice obligations, and the revised pilot scope; then M2 access control.
