@@ -1,6 +1,6 @@
 # Decisions and risks
 
-Updated: 17 September 2026. Business decisions belong to the developer/business owner. Proposed technical choices are not confirmed requirements.
+Updated: 12 November 2026. Business decisions belong to the developer/business owner. Proposed technical choices are not confirmed requirements.
 
 ## Confirmed
 
@@ -9,6 +9,7 @@ Updated: 17 September 2026. Business decisions belong to the developer/business 
 | D-001 | Solo developer, 30 hours/week | User confirmation |
 | D-002 | Products and services | User confirmation |
 | D-003 | Repository Markdown management pack | User requested creation |
+| D-006 | Roles and business-unit access: ten roles, assignments per unit (parent includes children), shared customers, company-wide Finance, every discount and stock adjustment needs manager approval, MFA after pilot, Photography a child unit of Creative. Affects ERP-007/M2 onward. Confirmed 12 Nov 2026. | Business owner answers in [role-matrix.md](role-matrix.md) |
 
 ## Open decisions / assumptions
 
@@ -16,7 +17,6 @@ Updated: 17 September 2026. Business decisions belong to the developer/business 
 |---|---|---|---|
 | D-004 | Internal web MVP and deferred scope | ERP-001 completion | Developer confirms boundaries |
 | D-005 | Shared catalogue, mixed invoices, product-only stock | ERP-010 | Developer validates with examples |
-| D-006 | Roles and business-unit/location access | ERP-007 | Developer supplies role matrix |
 | D-007 | Frontend stack and target devices | ERP-008 | Codex proposes based on constraints; record choice |
 | D-008 | Currency, tax, precision, invoice requirements | ERP-010/012 | Developer supplies business requirements; verify before implementation |
 | D-009 | Stock timing, negative stock, returns/cancellations | ERP-011/013 | Developer describes workflow |

@@ -13,7 +13,7 @@ Updated: 2 November 2026
 | Capacity budget | 360 hours through pilot; 420 including contingency |
 | Actual hours | Not reported |
 | Status | ERP-002 to ERP-005 done; M1 implemented and awaiting CI on GitHub |
-| Next technical task | M2 access control (ERP-007), after the role matrix (D-006) is confirmed |
+| Next technical task | M2 access control (ERP-007); role matrix (D-006) confirmed 12 Nov 2026. Hosting, booking ownership, ZRA and pilot scope still open |
 
 ## Working documents
 
@@ -22,6 +22,7 @@ Updated: 2 November 2026
 - [Week 1: 30-hour plan](week-01.md)
 - [Progress reports](progress.md)
 - [Decisions and risks](decisions.md)
+- [Role matrix (D-006, confirmed)](role-matrix.md)
 
 ## Working rhythm
 
